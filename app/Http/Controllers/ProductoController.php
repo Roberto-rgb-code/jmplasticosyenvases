@@ -33,6 +33,11 @@ class ProductoController extends Controller
 
     public function show(Producto $producto)
     {
-        return view('productos.show', compact('producto'));
+        $relacionados = Producto::query()
+            ->where('id', '!=', $producto->id)
+            ->orderBy('nombre')
+            ->get();
+
+        return view('productos.show', compact('producto', 'relacionados'));
     }
 }

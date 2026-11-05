@@ -42,11 +42,24 @@ class CotizacionController extends Controller
         return redirect()->route('cotizacion.cart')->with('ok', 'Producto agregado al cotizador.');
     }
 
-    public function cart()
+    public function cart(Request $request)
     {
-        $cart = $this->getCart();
+        if ($request->filled('add')) {
+            $producto = Producto::find($request->integer('add'));
+            if ($producto) {
+                return $this->add($request, $producto);
+            }
+        }
+
+        $cart = collect($this->getCart())
+            ->filter(fn ($item) => Producto::whereKey($item['id'] ?? 0)->exists())
+            ->all();
+        $this->putCart($cart);
+
         $total_piezas = collect($cart)->sum(fn ($i) => $i['cantidad'] * $i['piezas_empaque']);
-        return view('cotizacion.cart', compact('cart', 'total_piezas'));
+        $total_packs = collect($cart)->sum('cantidad');
+
+        return view('cotizacion.cart', compact('cart', 'total_piezas', 'total_packs'));
     }
 
     public function update(Request $request, Producto $producto)

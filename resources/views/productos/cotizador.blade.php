@@ -464,13 +464,13 @@
     <div class="container container-narrow">
       <div class="text-center mb-4">
         <a href="{{ route('productos.index') }}" class="breadcrumb-link">
-          <i class="bi bi-arrow-left me-2"></i>Regresar al catálogo
+          <x-icon name="arrow-left" />Regresar al catálogo
         </a>
       </div>
       
       <div class="text-center">
         <span class="badge badge-modern mb-3">
-          <i class="bi bi-calculator me-2"></i>Cotizador inteligente
+          <x-icon name="hash" />Cotizador inteligente
         </span>
         <h1 class="fw-bold display-5 mb-3">
           Calcula tu pedido
@@ -498,7 +498,7 @@
           <div class="specs-grid">
             <div class="spec-item">
               <div class="spec-icon">
-                <i class="bi bi-cup"></i>
+                <x-icon name="water" size="1.4em" />
               </div>
               <div class="spec-value">{{ $producto->capacidad_ml }}</div>
               <div class="spec-label">Mililitros</div>
@@ -506,7 +506,7 @@
             
             <div class="spec-item">
               <div class="spec-icon">
-                <i class="bi bi-nut"></i>
+                <x-icon name="cog" size="1.4em" />
               </div>
               <div class="spec-value">{{ $producto->rosca }}</div>
               <div class="spec-label">Rosca</div>
@@ -514,7 +514,7 @@
             
             <div class="spec-item">
               <div class="spec-icon">
-                <i class="bi bi-boxes"></i>
+                <x-icon name="folder-multiple" size="1.4em" />
               </div>
               <div class="spec-value">{{ $producto->piezas_empaque }}</div>
               <div class="spec-label">Pzas/paquete</div>
@@ -524,10 +524,10 @@
           <div class="mt-4">
             <div class="d-flex gap-2 justify-content-center">
               <a href="{{ route('producto.show', $producto) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-eye me-2"></i>Ver ficha técnica
+                <x-icon name="search" />Ver ficha técnica
               </a>
               <a href="https://wa.me/{{ config('contact.phone') }}" target="_blank" class="btn btn-success btn-sm">
-                <i class="bi bi-whatsapp me-2"></i>Consultar
+                <x-icon name="phone-call" />Consultar
               </a>
             </div>
           </div>
@@ -539,7 +539,7 @@
         <div class="calculator-form">
           <div class="text-center mb-4">
             <h3 class="fw-bold mb-3">
-              <i class="bi bi-calculator text-primary me-2"></i>
+              <x-icon name="hash" />
               Calculadora de pedido
             </h3>
             <p class="text-muted">
@@ -555,7 +555,7 @@
               
               <div class="quantity-input-group">
                 <button type="button" class="qty-btn" onclick="adjustQuantity(-1)">
-                  <i class="bi bi-dash"></i>
+                  <x-icon name="minus" size="1em" />
                 </button>
                 <input 
                   type="number" 
@@ -566,14 +566,14 @@
                   onchange="calcularAuto()"
                 >
                 <button type="button" class="qty-btn" onclick="adjustQuantity(1)">
-                  <i class="bi bi-plus"></i>
+                  <x-icon name="plus" size="1em" />
                 </button>
               </div>
             </div>
 
             <div class="text-center">
               <button type="button" class="calculate-btn" onclick="calcular()">
-                <i class="bi bi-play-fill me-2"></i>
+                <x-icon name="play" />
                 <span class="btn-text">Calcular total</span>
               </button>
             </div>
@@ -601,10 +601,10 @@
       </p>
       <div class="d-flex gap-3 justify-content-center flex-wrap">
         <a href="{{ route('cotizacion.cart') }}" class="btn btn-brand btn-lg">
-          <i class="bi bi-bag-plus me-2"></i>Ir al cotizador completo
+          <x-icon name="clipboard-plus" />Ir al cotizador completo
         </a>
         <a href="{{ route('productos.index') }}" class="btn btn-outline-secondary btn-lg">
-          <i class="bi bi-grid me-2"></i>Ver más productos
+          <x-icon name="grid-3" />Ver más productos
         </a>
       </div>
     </div>
@@ -660,7 +660,7 @@
     
     // Estado de carga
     btn.classList.add('loading');
-    btnText.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Calculando...';
+    btnText.innerHTML = '<iconify-icon icon="line-md:loading-loop" width="1.2em" height="1.2em"></iconify-icon> Calculando...';
     btn.disabled = true;
     
     setTimeout(() => {
@@ -669,7 +669,7 @@
       
       // Restaurar botón
       btn.classList.remove('loading');
-      btnText.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>Recalcular';
+      btnText.innerHTML = '<iconify-icon icon="line-md:backup-restore" width="1.2em" height="1.2em"></iconify-icon> Recalcular';
       btn.disabled = false;
     }, 1200); // Simular tiempo de procesamiento
   }
@@ -681,7 +681,7 @@
     const html = `
       <div class="text-center mb-4">
         <h3 class="fw-bold mb-2">
-          <i class="bi bi-check-circle text-white me-2"></i>
+          <iconify-icon icon="line-md:confirm-circle" width="1.3em" height="1.3em"></iconify-icon>
           Cálculo completado
         </h3>
         <p class="opacity-90">Aquí está el desglose de tu pedido</p>
@@ -691,7 +691,7 @@
         <div class="col-md-4">
           <div class="result-item animate-bounce-in" style="animation-delay: 0.1s">
             <div class="result-icon">
-              <i class="bi bi-box2-heart"></i>
+              <iconify-icon icon="line-md:heart" width="1.6em" height="1.6em"></iconify-icon>
             </div>
             <div class="result-value">${cantidad.toLocaleString()}</div>
             <div class="result-label">Paquetes</div>
@@ -700,7 +700,7 @@
         <div class="col-md-4">
           <div class="result-item animate-bounce-in" style="animation-delay: 0.2s">
             <div class="result-icon">
-              <i class="bi bi-grid-3x3-gap"></i>
+              <iconify-icon icon="line-md:grid-3" width="1.6em" height="1.6em"></iconify-icon>
             </div>
             <div class="result-value">${piezasPorEmpaque.toLocaleString()}</div>
             <div class="result-label">Pzas por paquete</div>
@@ -709,7 +709,7 @@
         <div class="col-md-4">
           <div class="result-item animate-bounce-in animate-pulse" style="animation-delay: 0.3s">
             <div class="result-icon">
-              <i class="bi bi-calculator"></i>
+              <iconify-icon icon="line-md:hash" width="1.6em" height="1.6em"></iconify-icon>
             </div>
             <div class="result-value">${totalPiezas.toLocaleString()}</div>
             <div class="result-label">Total de piezas</div>
@@ -719,7 +719,7 @@
       
       <div class="breakdown-card">
         <h5 class="fw-bold mb-3">
-          <i class="bi bi-list-ul me-2"></i>Desglose del pedido
+          <iconify-icon icon="line-md:list" width="1.2em" height="1.2em"></iconify-icon> Desglose del pedido
         </h5>
         <div class="breakdown-item">
           <span>Producto</span>
@@ -741,15 +741,15 @@
       
       <div class="action-buttons">
         <a href="{{ route('cotizacion.add', $producto) }}?cantidad=${cantidad}" class="btn-action primary">
-          <i class="bi bi-send-fill"></i>
+          <iconify-icon icon="line-md:email-arrow-up" width="1.2em" height="1.2em"></iconify-icon>
           Solicitar cotización
         </a>
         <a href="https://wa.me/{{ config('contact.phone') }}?text=Hola, necesito cotización para ${cantidad} paquetes de ${nombreProducto} (${totalPiezas.toLocaleString()} piezas total)" target="_blank" class="btn-action">
-          <i class="bi bi-whatsapp"></i>
+          <iconify-icon icon="line-md:phone-call" width="1.2em" height="1.2em"></iconify-icon>
           Enviar por WhatsApp
         </a>
         <button onclick="compartirResultado(${cantidad}, ${totalPiezas})" class="btn-action">
-          <i class="bi bi-share"></i>
+          <iconify-icon icon="line-md:external-link" width="1.2em" height="1.2em"></iconify-icon>
           Compartir cálculo
         </button>
       </div>
@@ -784,7 +784,7 @@
         // Feedback visual
         const btn = event.target.closest('.btn-action');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="bi bi-check"></i> ¡Copiado!';
+        btn.innerHTML = '<iconify-icon icon="line-md:confirm" width="1.2em" height="1.2em"></iconify-icon> ¡Copiado!';
         setTimeout(() => {
           btn.innerHTML = originalText;
         }, 2000);

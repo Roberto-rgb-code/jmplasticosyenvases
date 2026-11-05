@@ -19,7 +19,4 @@ Route::patch('/cotizacion/update/{producto}', [CotizacionController::class, 'upd
 Route::delete('/cotizacion/remove/{producto}', [CotizacionController::class, 'remove'])->name('cotizacion.remove');
 Route::post('/cotizacion/enviar', [CotizacionController::class, 'submit'])->name('cotizacion.submit');
 
-// Contacto
-Route::get('/contacto', function () {
-    return view('contacto');
-})->name('contacto');
+Route::view('/contacto', 'contacto')->name('contacto');
