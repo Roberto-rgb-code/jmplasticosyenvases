@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 class CotizacionController extends Controller
 {
@@ -21,7 +22,7 @@ class CotizacionController extends Controller
 
     public function add(Request $request, Producto $producto)
     {
-        $cantidad = max(1, (int) $request->input('cantidad', 1)); // paquetes
+        $cantidad = max(1, (int) $request->input('cantidad', 1));
         $cart = $this->getCart();
 
         if (isset($cart[$producto->id])) {
@@ -34,11 +35,12 @@ class CotizacionController extends Controller
                 'piezas_empaque' => $producto->piezas_empaque,
                 'capacidad_ml' => $producto->capacidad_ml,
                 'rosca' => $producto->rosca,
-                'cantidad' => $cantidad, // paquetes
+                'cantidad' => $cantidad,
             ];
         }
 
         $this->putCart($cart);
+
         return redirect()->route('cotizacion.cart')->with('ok', 'Producto agregado al cotizador.');
     }
 
@@ -52,7 +54,23 @@ class CotizacionController extends Controller
         }
 
         $cart = collect($this->getCart())
-            ->filter(fn ($item) => Producto::whereKey($item['id'] ?? 0)->exists())
+            ->map(function ($item) {
+                $producto = Producto::find($item['id'] ?? 0);
+                if (! $producto) {
+                    return null;
+                }
+
+                return [
+                    'id' => $producto->id,
+                    'nombre' => $producto->nombre,
+                    'imagen' => $producto->imagen,
+                    'piezas_empaque' => $producto->piezas_empaque,
+                    'capacidad_ml' => $producto->capacidad_ml,
+                    'rosca' => $producto->rosca,
+                    'cantidad' => max(1, (int) ($item['cantidad'] ?? 1)),
+                ];
+            })
+            ->filter()
             ->all();
         $this->putCart($cart);
 
@@ -71,7 +89,8 @@ class CotizacionController extends Controller
             $cart[$producto->id]['cantidad'] = $cantidad;
             $this->putCart($cart);
         }
-        return back();
+
+        return back()->with('ok', 'Cantidad actualizada.');
     }
 
     public function remove(Producto $producto)
@@ -79,7 +98,8 @@ class CotizacionController extends Controller
         $cart = $this->getCart();
         unset($cart[$producto->id]);
         $this->putCart($cart);
-        return back();
+
+        return back()->with('ok', 'Producto quitado del cotizador.');
     }
 
     public function submit(Request $request)
@@ -87,40 +107,50 @@ class CotizacionController extends Controller
         $cart = $this->getCart();
 
         $request->validate([
-            'nombre'       => 'required|string|max:120',
-            'email'        => 'nullable|email',
-            'telefono'     => 'nullable|string|max:40',
-            'comentarios'  => 'nullable|string|max:1000',
+            'nombre' => 'required|string|max:120',
+            'email' => 'nullable|email|max:120',
+            'telefono' => 'nullable|string|max:40',
+            'comentarios' => 'nullable|string|max:1000',
         ]);
+
+        if (! $request->filled('email') && ! $request->filled('telefono')) {
+            throw ValidationException::withMessages([
+                'email' => 'Indica un email o un teléfono para contactarte.',
+            ]);
+        }
 
         if (empty($cart)) {
             return back()->with('err', 'Tu cotizador está vacío.');
         }
 
         $nombre = $request->input('nombre');
-        $email  = $request->input('email');
-        $tel    = $request->input('telefono');
-        $com    = $request->input('comentarios');
+        $email = $request->input('email');
+        $tel = $request->input('telefono');
+        $com = $request->input('comentarios');
 
-        $lineas   = [];
-        $lineas[] = "Nueva solicitud de cotización (JM Plásticos y Envases)";
-        $lineas[] = "---------------------------------------------";
+        $lineas = [];
+        $lineas[] = 'Nueva solicitud de cotización (JM Plásticos y Envases)';
+        $lineas[] = '---------------------------------------------';
         foreach ($cart as $i) {
             $packs = $i['cantidad'];
             $ppack = $i['piezas_empaque'];
-            $lineas[] = "{$i['nombre']} | {$i['capacidad_ml']} ml | Rosca {$i['rosca']} | {$ppack} pzas/pack x {$packs} pack(s) = " . ($ppack * $packs) . " pzas";
+            $lineas[] = "{$i['nombre']} | {$i['capacidad_ml']} ml | Rosca {$i['rosca']} | {$ppack} pzas/pack x {$packs} pack(s) = ".($ppack * $packs).' pzas';
         }
         $total = collect($cart)->sum(fn ($i) => $i['cantidad'] * $i['piezas_empaque']);
-        $lineas[] = "---------------------------------------------";
+        $lineas[] = '---------------------------------------------';
         $lineas[] = "Total de piezas: {$total}";
         $lineas[] = "Cliente: {$nombre}";
-        if ($tel)   { $lineas[] = "Tel: {$tel}"; }
-        if ($email) { $lineas[] = "Email: {$email}"; }
-        if ($com)   { $lineas[] = "Comentarios: {$com}"; }
+        if ($tel) {
+            $lineas[] = "Tel: {$tel}";
+        }
+        if ($email) {
+            $lineas[] = "Email: {$email}";
+        }
+        if ($com) {
+            $lineas[] = "Comentarios: {$com}";
+        }
 
         $mensaje = implode("\n", $lineas);
-
-        // Destinatario: .env COTIZACIONES_EMAIL o, si no existe, config('contact.email')
         $to = env('COTIZACIONES_EMAIL') ?: config('contact.email');
 
         $mailOk = false;
@@ -132,14 +162,16 @@ class CotizacionController extends Controller
                 $mailOk = true;
             } catch (\Throwable $e) {
                 $mailOk = false;
-                Log::warning('No se pudo enviar la cotización por correo: ' . $e->getMessage());
+                Log::warning('No se pudo enviar la cotización por correo: '.$e->getMessage());
             }
         }
 
-        $msg = $mailOk
-            ? '✔️ Cotización enviada por correo con éxito. También puedes mandarla por WhatsApp con el botón verde.'
-            : '✔️ Recibimos tu solicitud. Si el correo no se envió, puedes mandarla por WhatsApp con el botón verde.';
+        $this->putCart([]);
 
-        return back()->with('ok', $msg);
+        $msg = $mailOk
+            ? 'Cotización enviada. Te contactamos pronto. También puedes reenviar el detalle por WhatsApp si lo necesitas.'
+            : 'Recibimos tu solicitud. Si el correo no llegó, reenvíala por WhatsApp con el botón verde.';
+
+        return redirect()->route('cotizacion.cart')->with('ok', $msg);
     }
 }

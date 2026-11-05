@@ -4,7 +4,14 @@
 @section('content')
 <header class="hero">
   <div class="container container-narrow text-center">
-    <span class="chip mb-3"><x-icon name="grid-3" /> {{ $productos->count() }} modelos activos</span>
+    <span class="chip mb-3">
+      <x-icon name="grid-3" />
+      @if(request()->hasAny(['q','rosca','cap_min','cap_max','sort']))
+        {{ $productos->count() }} {{ $productos->count() === 1 ? 'resultado' : 'resultados' }}
+      @else
+        {{ $productos->count() }} modelos activos
+      @endif
+    </span>
     <h1 class="font-display display-4 display-tight mb-3">Catálogo PET de 5 litros</h1>
     <p class="text-secondary lead mb-0 mx-auto" style="max-width: 38rem;">Filtra por rosca o capacidad y agrégalo al cotizador. El precio se confirma al enviar tu solicitud.</p>
   </div>

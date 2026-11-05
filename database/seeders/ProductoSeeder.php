@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Producto;
+use Illuminate\Database\Seeder;
 
 class ProductoSeeder extends Seeder
 {
@@ -26,14 +26,14 @@ class ProductoSeeder extends Seeder
                 'capacidad_ml' => 5000,
                 'rosca' => 'R-48',
                 'piezas_empaque' => 50,
-                'imagen' => 'Salsero Alto 5000 ml.png',
+                'imagen' => 'salsero-alto-5000.png',
             ],
             [
                 'nombre' => 'Piña 5000 ml Asa Blanca',
                 'capacidad_ml' => 5000,
                 'rosca' => 'R-48',
                 'piezas_empaque' => 50,
-                'imagen' => 'Piña 5000 ml Asa Blanca.png',
+                'imagen' => 'pina-5000-asa-blanca.png',
             ],
         ];
 

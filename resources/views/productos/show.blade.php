@@ -19,7 +19,7 @@
   <div class="row g-5 align-items-start">
     <div class="col-lg-6">
       <div class="card-soft p-4 p-lg-5 text-center product-media" style="height: auto;">
-        <img src="{{ asset('images/'.$producto->imagen) }}" alt="{{ $producto->nombre }}" class="img-fluid" style="max-height: 420px;">
+        <img src="{{ $producto->imagen_url }}" alt="{{ $producto->nombre }}" class="img-fluid" style="max-height: 420px;">
       </div>
     </div>
     <div class="col-lg-6">

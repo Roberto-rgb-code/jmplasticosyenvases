@@ -1,6 +1,6 @@
 <article class="card-soft product-card h-100 d-flex flex-column">
   <a href="{{ route('producto.show', $producto) }}" class="product-media text-decoration-none">
-    <img src="{{ asset('images/'.$producto->imagen) }}" alt="{{ $producto->nombre }}" loading="lazy">
+    <img src="{{ $producto->imagen_url }}" alt="{{ $producto->nombre }}" loading="lazy">
   </a>
   <div class="p-4 d-flex flex-column flex-grow-1">
     <div class="d-flex justify-content-between align-items-start gap-2 mb-2">

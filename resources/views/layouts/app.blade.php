@@ -115,6 +115,15 @@
       display: grid; place-items: center; position: relative; text-decoration: none;
     }
     .nav-icon-btn:hover { border-color: var(--brand); background: #f0fdfa; }
+    .nav-burger {
+      width: 1.05rem; height: .72rem; display: grid; align-content: space-between;
+    }
+    .nav-burger span {
+      display: block; height: 2px; border-radius: 999px; background: #0f766e;
+    }
+    .nav-icon-btn .badge {
+      font-size: .65rem; min-width: 1.15rem; padding: .2em .35em;
+    }
     .btn-nav-cta {
       display: none; align-items: center; gap: .4rem;
       background: #12324a; color: #fff !important; text-decoration: none;
@@ -273,6 +282,8 @@
     .cart-thumb { width: 72px; height: 72px; }
     .offcanvas { width: min(100%, 22rem); z-index: 1090; }
     .offcanvas-backdrop { z-index: 1085; }
+    .alert { position: relative; z-index: 1; }
+    .alert .btn-close { flex-shrink: 0; }
     .offcanvas-body { align-content: start; }
     .offcanvas-body .btn {
       min-height: 48px;
@@ -377,7 +388,7 @@
           <x-icon name="folder" size="18" color="ffffff" /> Ver catálogo
         </a>
         <button class="nav-icon-btn nav-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas" aria-controls="navOffcanvas" aria-label="Abrir menú">
-          <x-icon name="menu" size="22" />
+          <span class="nav-burger" aria-hidden="true"><span></span><span></span><span></span></span>
         </button>
       </div>
     </nav>

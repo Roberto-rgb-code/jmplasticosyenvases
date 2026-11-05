@@ -489,7 +489,7 @@
       <div class="col-lg-5">
         <div class="product-preview">
           <img 
-            src="{{ asset('images/'.$producto->imagen) }}" 
+            src="{{ $producto->imagen_url }}" 
             alt="{{ $producto->nombre }}" 
             class="product-image-calc"
           >
